@@ -33,8 +33,8 @@ export default class Game {
     this.size = 4;
     this.grid = initialState || this.createEmptyGrid();
     this.status = 'idle';
-    this.score = 0;
     this.isFirstMove = true;
+    this.score = 0;
   }
 
   moveLeft() {
