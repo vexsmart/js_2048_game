@@ -5,7 +5,7 @@
  * Now it has a basic structure, that is needed for testing.
  * Feel free to add more props and methods if needed.
  */
-class Game {
+export default class Game {
   /**
    * Creates a new game instance.
    *
@@ -30,10 +30,11 @@ class Game {
     this.msgWin = document.querySelector('.message-win');
     this.msgLose = document.querySelector('.message-lose');
 
-    this.grid = initialState || this.createEmptyGrid();
     this.size = 4;
+    this.grid = initialState || this.createEmptyGrid();
     this.status = 'idle';
     this.score = 0;
+    this.isFirstMove = true;
   }
 
   moveLeft() {
@@ -146,7 +147,7 @@ class Game {
     this.renderMessage();
   }
   checkForWin() {
-    this.grid.some((row) => row.some((cell) => cell === 2048));
+    return this.grid.some((row) => row.some((cell) => cell === 2048));
   }
 
   checkForLose() {
@@ -220,11 +221,24 @@ class Game {
     return newGrid;
   }
 
+  handleValidMove() {
+    if (this.isFirstMove) {
+      this.startBtn.textContent = 'Restart';
+      this.startBtn.classList.remove('start');
+      this.startBtn.classList.add('restart');
+      this.isFirstMove = false;
+    }
+    this.addRandomTile();
+    this.render();
+    this.updateStatus();
+  }
+
   /**
    * Starts the game.
    */
   start() {
     this.grid = this.createEmptyGrid();
+    this.isFirstMove = true;
     this.startBtn.textContent = 'Restart';
     this.startBtn.classList.remove('start');
     this.startBtn.classList.add('restart');

@@ -1,7 +1,9 @@
 'use strict';
 
+import Game from '../modules/Game.class';
 // Uncomment the next lines to use your game instance in the browser
-const Game = require('../modules/Game.class');
+// const Game = require('../modules/Game.class');
+
 const game = new Game();
 
 game.startBtn.addEventListener('click', () => game.start());
