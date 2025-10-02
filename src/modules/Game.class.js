@@ -44,12 +44,14 @@ export default class Game {
 
     const gridBeforeMove = JSON.stringify(this.grid);
 
-    this.grid = this.combineTiles(this.grid);
+    const { newGrid, scoreDelta } = this.combineTiles(
+      JSON.parse(gridBeforeMove),
+    );
 
-    if (gridBeforeMove !== JSON.stringify(this.grid)) {
-      this.addRandomTile();
-      this.render();
-      this.updateStatus();
+    if (JSON.stringify(newGrid) !== gridBeforeMove) {
+      this.grid = newGrid;
+      this.score += scoreDelta;
+      this.handleValidMove();
     }
   }
   moveRight() {
@@ -58,17 +60,18 @@ export default class Game {
     }
 
     const gridBeforeMove = JSON.stringify(this.grid);
-    let currentGrid = this.grid;
+    const gridCopy = JSON.parse(gridBeforeMove);
 
-    currentGrid.forEach((row) => row.reverse());
-    currentGrid = this.combineTiles(currentGrid);
-    currentGrid.forEach((row) => row.reverse());
-    this.grid = currentGrid;
+    gridCopy.forEach((row) => row.reverse());
 
-    if (gridBeforeMove !== JSON.stringify(this.grid)) {
-      this.addRandomTile();
-      this.render();
-      this.updateStatus();
+    const { newGrid, scoreDelta } = this.combineTiles(gridCopy);
+
+    newGrid.forEach((row) => row.reverse());
+
+    if (JSON.stringify(newGrid) !== gridBeforeMove) {
+      this.grid = newGrid;
+      this.score += scoreDelta;
+      this.handleValidMove();
     }
   }
   moveUp() {
@@ -77,16 +80,17 @@ export default class Game {
     }
 
     const gridBeforeMove = JSON.stringify(this.grid);
-    let currentGrid = this.grid;
+    let gridCopy = JSON.parse(gridBeforeMove);
 
-    currentGrid = this.transpose(currentGrid);
-    currentGrid = this.combineTiles(currentGrid);
-    this.grid = this.transpose(currentGrid);
+    gridCopy = this.transpose(gridCopy);
 
-    if (gridBeforeMove !== JSON.stringify(this.grid)) {
-      this.addRandomTile();
-      this.render();
-      this.updateStatus();
+    const { newGrid, scoreDelta } = this.combineTiles(gridCopy);
+    const finalGrid = this.transpose(newGrid);
+
+    if (JSON.stringify(finalGrid) !== gridBeforeMove) {
+      this.grid = finalGrid;
+      this.score += scoreDelta;
+      this.handleValidMove();
     }
   }
   moveDown() {
@@ -95,18 +99,21 @@ export default class Game {
     }
 
     const gridBeforeMove = JSON.stringify(this.grid);
-    let currentGrid = this.grid;
+    let gridCopy = JSON.parse(gridBeforeMove);
 
-    currentGrid = this.transpose(currentGrid);
-    currentGrid.forEach((row) => row.reverse());
-    currentGrid = this.combineTiles(currentGrid);
-    currentGrid.forEach((row) => row.reverse());
-    this.grid = this.transpose(currentGrid);
+    gridCopy = this.transpose(gridCopy);
+    gridCopy.forEach((row) => row.reverse());
 
-    if (gridBeforeMove !== JSON.stringify(this.grid)) {
-      this.addRandomTile();
-      this.render();
-      this.updateStatus();
+    const { newGrid, scoreDelta } = this.combineTiles(gridCopy);
+
+    newGrid.forEach((row) => row.reverse());
+
+    const finalGrid = this.transpose(newGrid);
+
+    if (JSON.stringify(finalGrid) !== gridBeforeMove) {
+      this.grid = finalGrid;
+      this.score += scoreDelta;
+      this.handleValidMove();
     }
   }
 
@@ -198,6 +205,7 @@ export default class Game {
   }
 
   combineTiles(grid) {
+    let scoreDelta = 0;
     const newGrid = [];
 
     for (const row of grid) {
@@ -206,7 +214,7 @@ export default class Game {
       for (let i = 0; i < newRow.length - 1; i++) {
         if (newRow[i] === newRow[i + 1]) {
           newRow[i] *= 2;
-          this.score += newRow[i];
+          scoreDelta += newRow[i];
           newRow.splice(i + 1, 1);
         }
       }
@@ -214,11 +222,10 @@ export default class Game {
       while (newRow.length < this.size) {
         newRow.push(0);
       }
-
       newGrid.push(newRow);
     }
 
-    return newGrid;
+    return { newGrid, scoreDelta };
   }
 
   handleValidMove() {
