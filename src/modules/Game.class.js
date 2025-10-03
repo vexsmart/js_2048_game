@@ -20,15 +20,23 @@ export default class Game {
    * If passed, the board will be initialized with the provided
    * initial state.
    */
-  constructor(initialState) {
+  constructor(
+    initialState,
+    startBtn,
+    scoreEl,
+    cells,
+    msgStart,
+    msgWin,
+    msgLose,
+  ) {
     // eslint-disable-next-line no-console
-    this.startBtn = document.querySelector('.button.start');
-    this.scoreEl = document.querySelector('.game-score');
-    this.cells = Array.from(document.querySelectorAll('.field-cell'));
+    this.startBtn = startBtn;
+    this.scoreEl = scoreEl;
+    this.cells = cells;
 
-    this.msgStart = document.querySelector('.message-start');
-    this.msgWin = document.querySelector('.message-win');
-    this.msgLose = document.querySelector('.message-lose');
+    this.msgStart = msgStart;
+    this.msgWin = msgWin;
+    this.msgLose = msgLose;
 
     this.size = 4;
     this.grid = initialState || this.createEmptyGrid();

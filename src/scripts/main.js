@@ -4,7 +4,30 @@ import Game from '../modules/Game.class';
 // Uncomment the next lines to use your game instance in the browser
 // const Game = require('../modules/Game.class');
 
-const game = new Game();
+const initialState = [
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+];
+
+const startBtn = document.querySelector('.button.start');
+const scoreEl = document.querySelector('.game-score');
+const cells = Array.from(document.querySelectorAll('.field-cell'));
+
+const msgStart = document.querySelector('.message-start');
+const msgWin = document.querySelector('.message-win');
+const msgLose = document.querySelector('.message-lose');
+
+const game = new Game(
+  initialState,
+  startBtn,
+  scoreEl,
+  cells,
+  msgStart,
+  msgWin,
+  msgLose,
+);
 
 game.startBtn.addEventListener('click', () => game.start());
 
